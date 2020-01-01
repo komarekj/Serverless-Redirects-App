@@ -1,0 +1,32 @@
+{
+  "name": "redirects-sls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@pixelter/sls-response-helper": "^1.0.4",
+    "async": "^3.1.0",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "moment-range": "^4.0.2",
+    "mongoose": "^5.8.1",
+    "nonce": "^1.0.4",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5",
+    "shopify-api-node": "^2.25.1"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.596.0",
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.19.1",
+    "serverless-offline": "^5.12.1"
+  }
+}

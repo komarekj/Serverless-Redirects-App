@@ -1,0 +1,63 @@
+service: shopify-app-redirects
+app: shopify-app-redirects
+org: pixelter
+
+plugins:
+  - serverless-offline
+
+custom:
+  shopifyConfig: ${file(./config/shopify.${self:provider.stage}.json)}
+  databaseConfig: ${file(./config/database.${self:provider.stage}.json)}
+  hostConfig: ${file(./config/host.${self:provider.stage}.json)}
+  s3Config: ${file(./config/s3.${self:provider.stage}.json)}
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: ${opt:stage, 'dev'}
+  environment:
+    # Shopify App
+    SHOPIFY_APP_KEY: ${self:custom.shopifyConfig.apiKey}
+    SHOPIFY_APP_SECRET: ${self:custom.shopifyConfig.apiSecret}
+    SHOPIFY_APP_ID: ${self:custom.shopifyConfig.id}
+    SHOPIFY_SCOPES: ${self:custom.shopifyConfig.scopes}
+    # Database
+    DB_URL: ${self:custom.databaseConfig.url}
+    # Host
+    DOMAIN: ${self:custom.hostConfig.url}
+    # S3
+    S3_BUCKET: ${self:custom.s3Config.bucket}
+
+functions:
+  # Shopify Install
+  installUrl:
+    handler: src/services/shopify/install.url
+    events:
+      - http:
+          path: install/url
+          method: post
+          cors: true
+  installCallback:
+    handler: src/services/shopify/callback.handle
+    events:
+      - http:
+          path: install/callback
+          method: get
+  # Crons
+  cronEvents:
+    handler: src/services/cron/events/handler.handle
+  cronRedirectSync:
+    handler: src/services/cron/sync/redirectSync.handle
+  # API Handler
+  api:
+    handler: src/services/api/handler.handle
+    events:
+      - http:
+          path: api/{resource}/{action}
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                resource: true
+                action: true
